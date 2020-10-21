@@ -288,7 +288,8 @@ http localhost:8081/orders     # 접수상태가 "shipped(배송됨)"으로 확�
 ## CI/CD 설정
 
 order에 대해 repository를 구성하였고, CI/CD플랫폼은 AWS의 CodeBuild를 사용했다.
-![image](https://user-images.githubusercontent.com/70302900/96588525-b87bcd80-131e-11eb-90c8-8c4d1c4c1078.png)
+![image](https://user-images.githubusercontent.com/70302900/96759201-abd8a180-1412-11eb-8cce-0d4b30d47de0.png)
+
 
 Git Hook 설정으로 연결된 GitHub의 소스 변경 발생 시 자동 배포된다.
 ![image](https://user-images.githubusercontent.com/70302900/96588864-19a3a100-131f-11eb-8b72-846538a6ae42.png)
