@@ -149,7 +149,7 @@ pom.xml 에 적용
  -->	
 		<dependency>
 			<groupId>com.hsqldb</groupId>
-			<artifactId>h2</artifactId>
+			<artifactId>hsqldb</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 ```
