@@ -37,7 +37,8 @@
 1. 고객이 렌탈 주문을 취소할 수 있다.
 1. 렌탈 주문이 취소되면 배송이 취소된다.
 1. 고객이 자신의 렌탈 정보를 조회한다.
-1. (개인) 배송 시작 혹은 주문(결제)취소로 인한 배송 취소 시 고객에게 알림을 발송한다. (비동기식)
+1. (개인) 주문이 접수되면 알림을 발송한다. (비동기식)
+1. (개인) 주문 취소는 고객에게 알림을 발송한 후 취소한다. (동기식)
 
 
 ## 비기능적 요구사항
@@ -66,7 +67,7 @@
 
 
 ## 헥사고날 아키텍처 다이어그램 도출
-![image](https://user-images.githubusercontent.com/70302900/96687738-43aaa100-13bb-11eb-86e0-eff421430e54.png)
+![image](https://user-images.githubusercontent.com/70302900/96687888-75bc0300-13bb-11eb-88de-fad5e0d931f8.png)
 
 
     - Chris Richardson, MSA Patterns 참고하여 Inbound adaptor와 Outbound adaptor를 구분함
