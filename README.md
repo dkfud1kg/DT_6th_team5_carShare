@@ -64,10 +64,16 @@
 
 ## 이벤트스토밍
 * MSAEz 로 모델링한 이벤트스토밍 결과:  
+![image](https://user-images.githubusercontent.com/70302900/96704954-9db56180-13cf-11eb-96ec-7b8292b26324.png)
+
+* alarm 서비스를 추가한 이벤트스토밍 결과:  
 ![image](https://user-images.githubusercontent.com/70302900/96686874-14476480-13ba-11eb-8f48-9817ae55596e.png)
 
 
 ## 헥사고날 아키텍처 다이어그램 도출
+![image](https://user-images.githubusercontent.com/70302900/96705114-d35a4a80-13cf-11eb-9b8a-0bd8af1be18b.png)
+
+* alarm 서비스를 추가하여 다이어그램 도출
 ![image](https://user-images.githubusercontent.com/70302900/96687888-75bc0300-13bb-11eb-88de-fad5e0d931f8.png)
 
 
