@@ -74,7 +74,7 @@
 ![image](https://user-images.githubusercontent.com/70302900/96705114-d35a4a80-13cf-11eb-9b8a-0bd8af1be18b.png)
 
 * alarm 서비스를 추가하여 다이어그램 도출
-![image](https://user-images.githubusercontent.com/70302900/96687888-75bc0300-13bb-11eb-88de-fad5e0d931f8.png)
+![image](https://user-images.githubusercontent.com/70302900/96705325-187e7c80-13d0-11eb-95c3-441e1f32e96e.png)
 
 
     - Chris Richardson, MSA Patterns 참고하여 Inbound adaptor와 Outbound adaptor를 구분함
