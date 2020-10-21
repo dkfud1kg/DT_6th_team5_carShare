@@ -79,8 +79,15 @@
 ## 시나리오 테스트결과
 | 기능 | 이벤트 Payload |
 |---|:---:|
-| 1.고객이 공유차 렌탈을 접수한다.</br>2. 결제가 정상적으로 완료되면 접수가 진행된다. (Sync)</br>3.접수가 완료되면 배송이 시작된다. (Async)</br>3.배송이 시작되면 접수정보의 상태를 변경한다. (Async)|![image](https://user-images.githubusercontent.com/70302900/96770950-00344f00-141c-11eb-86cb-d168b13e6a71.png)|
-| 4.고객이 공유차 렌탈을 취소한다.</br>5. 배송 취소가 정상적으로 완료되면 결제 취소가 진행된다. (Sync)</br>6.결제 취소도 정상적으로 이어지면 접수가 최종적으로 취소된다. (Async)|![image](https://user-images.githubusercontent.com/70302900/96770959-032f3f80-141c-11eb-98ec-77bf03cb6b9e.png)|
+| 
+1. 고객이 공유차 렌탈 주문한다.
+2. 결제가 정상적으로 완료되면 주문이 완료된다. (Sync)
+3. 주문이 완료되면 배송이 시작된다. (Async)
+4. 배송이 시작되면 접수정보의 상태를 변경한다. (Async)
+5. (개인) 주문 및 배송이 시작되면, 알림이 발송된다. (Async)|![image](https://user-images.githubusercontent.com/70302900/96770950-00344f00-141c-11eb-86cb-d168b13e6a71.png)|
+| 6. 고객이 공유차 렌탈 주문을 취소한다.
+7. 배송 취소가 정상적으로 완료되면 결제 취소가 진행된다. (Sync)
+8. (개인) 주문 취소 알림이 발송 완료되면 주문이 최종적으로 취소된다. (Sync)|![image](https://user-images.githubusercontent.com/70302900/96770959-032f3f80-141c-11eb-98ec-77bf03cb6b9e.png)|
 | 7.고객이 접수 상태를 조회한다.|![제목없음21](https://user-images.githubusercontent.com/42608068/96581350-a5640000-1314-11eb-8336-0474e2d1716b.png)|
 
 ## DDD 의 적용
