@@ -62,11 +62,11 @@
 
 ## 이벤트스토밍
 * MSAEz 로 모델링한 이벤트스토밍 결과:  
-![image](https://user-images.githubusercontent.com/70302900/96685899-bb2b0100-13b8-11eb-9bcd-e4fb64b97792.png)
+![image](https://user-images.githubusercontent.com/70302900/96686874-14476480-13ba-11eb-8f48-9817ae55596e.png)
 
 
 ## 헥사고날 아키텍처 다이어그램 도출
-![제목없음21](https://user-images.githubusercontent.com/42608068/96549943-260e0680-12eb-11eb-8119-394cb324883d.png)
+![image](https://user-images.githubusercontent.com/70302900/96687540-0514e680-13bb-11eb-8d9b-10e1c6b4fa24.png)
 
     - Chris Richardson, MSA Patterns 참고하여 Inbound adaptor와 Outbound adaptor를 구분함
     - 호출관계에서 PubSub 과 Req/Resp 를 구분함
