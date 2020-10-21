@@ -140,12 +140,11 @@ pom.xml 에 적용
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
- -->
+ -->	
 		<dependency>
-		    <groupId>org.hsqldb</groupId>
-		    <artifactId>hsqldb</artifactId>
-		    <version>2.4.0</version>
-		    <scope>runtime</scope>
+			<groupId>com.hsqldb</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 ```
 
