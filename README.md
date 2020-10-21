@@ -8,7 +8,7 @@
  1. 배송관리 : https://github.com/YoungDukGe1000Won/carShareDelivery.git
  1. 고객페이지 : https://github.com/YoungDukGe1000Won/carShareStatusview.git
  1. 게이트웨이 : https://github.com/YoungDukGe1000Won/carShareGateway.git
-
+ 1. 알림 : https://github.com/dkfud1kg/alarm.git
 
 # Table of contents
 
@@ -34,9 +34,11 @@
 1. 고객이 공유차를 선택하여 렌탈한다.
 1. 고객이 결제하여 접수한다.
 1. 업체가 공유차를 고객위치로 가져다놓는다.
-1. 고객이 렌탈을 취소할 수 있다.
-1. 렌탈이 취소되면 배송이 취소된다.
+1. 고객이 렌탈 주문을 취소할 수 있다.
+1. 렌탈 주문이 취소되면 배송이 취소된다.
 1. 고객이 자신의 렌탈 정보를 조회한다.
+1. 배송 시작 시 고객에게 알림을 발송한다. (비동기식)
+
 
 ## 비기능적 요구사항
 1. 트랜잭션
