@@ -8,7 +8,7 @@
  1. 배송관리 : https://github.com/dkfud1kg/carShareDelivery.git
  1. 고객페이지 : https://github.com/dkfud1kg/carShareStatusview.git
  1. 게이트웨이 : https://github.com/dkfud1kg/carShareGateway.git
- 1. 알림 : https://github.com/dkfud1kg/alarm.git
+ 1. 알림 : https://github.com/dkfud1kg/carShareAlarm.git
 
 # Table of contents
 
