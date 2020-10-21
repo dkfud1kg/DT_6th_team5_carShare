@@ -31,11 +31,11 @@
 # 서비스 시나리오
 
 ## 기능적 요구사항
-1. 고객이 공유차를 선택하여 렌탈한다.
-1. 고객이 결제하여 접수한다.
+1. 고객이 공유차를 선택하여 렌탈 주문한다.
+1. 고객이 결제하면 접수된다.
 1. 업체가 공유차를 고객위치로 가져다놓는다.
 1. 고객이 렌탈 주문을 취소할 수 있다.
-1. 렌탈 주문이 취소되면 배송이 취소된다.
+1. 렌탈 주문 취소 시 배송과 결제가 취소된다.
 1. 고객이 자신의 렌탈 정보를 조회한다.
 1. (개인) 주문이 접수되면 알림을 발송한다. (비동기식)
 1. (개인) 주문 취소는 고객에게 알림을 발송한 후 취소한다. (동기식)
@@ -157,7 +157,8 @@ pom.xml 에 적용
 
 ## 동기식 호출 과 Fallback 처리
 
-분석단계에서의 조건 중 하나로 접수(order)->결제(payment) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다.
+접수(order) > 알림(alarm) 간의 일부 프로세스(주문취소)호출을 동기식 일관성을 유지하는 트랜잭션으로 처리하도록 했다. 
+호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다.
 - FeignClient 서비스 구현
 
 ```
@@ -171,7 +172,7 @@ public interface PaymentService {
 
 }
 ```
-- 접수요청을 받은 직후(@PostPersist) 결제를 요청하도록 처리
+- 접수취소요청을 받은 직후(@PostPersist) 알림을 발송하도록 처리
 ```
 # Order.java (Entity)
 
@@ -191,23 +192,23 @@ public interface PaymentService {
     }
 ```
 
-- 동기식 호출에서는 호출 시간에 따른 타임 커플링이 발생하며, 결제 서비스가 장애가 나면 접수요청 못받는다는 것을 확인
+- 동기식 호출에서는 호출 시간에 따른 타임 커플링이 발생하며, 알림 서비스가 장애가 주문취소를 못한는다는 것을 확인
 
 
 ```
-#결제(payment) 서비스를 잠시 내려놓음 (ctrl+c)
+#알림(alarm) 서비스를 잠시 내려놓음 (ctrl+c)
 
-#접수요청 처리
-http localhost:8081/orders productId=1001 qty=1 status="order"   #Fail
-http localhost:8081/orders productId=1002 qty=3 status="order"   #Fail
+#주문취소 처리
+http DELETE localhost:8081/orders productId=1001 qty=1 status="order"   #Fail
+http DELETElocalhost:8081/orders productId=1002 qty=3 status="order"   #Fail
 
-#결제 서비스 재기동
-cd carsharepayment
+#알림 서비스 재기동
+cd carsharealarm
 mvn spring-boot:run
 
-#접수요청 처리 성공
-http localhost:8081/orders productId=1001 qty=1 status="order"   #Success
-http localhost:8081/orders productId=1002 qty=3 status="order"   #Success
+#주문취소요청 처리 성공
+http DELETE localhost:8081/orders productId=1001 qty=1 status="order"   #Success
+http DELETE localhost:8081/orders productId=1002 qty=3 status="order"   #Success
 ```
 
 - 또한 과도한 요청시에 서비스 장애가 도미노 처럼 벌어질 수 있다. (서킷브레이커, Fallback 처리는 운영단계에서 설명한다.)
@@ -215,27 +216,27 @@ http localhost:8081/orders productId=1002 qty=3 status="order"   #Success
 
 ## 비동기식 호출 / 시간적 디커플링 / 장애격리 / 최종 (Eventual) 일관성 테스트
 
-결제가 이루어진 후에 배송 서비스로 이를 알려주는 행위는 동기식이 아니라 비동기식으로 처리하여 배송 시스템의 처리를 위해 결제가 블로킹되지 않도록 처리한다.
+주문이 이루어진 후에 알림 서비스로 이를 알려주는 행위는 동기식이 아니라 비동기식으로 처리하여  시스템의 처리를 위해 결제가 블로킹되지 않도록 처리한다.
  
-- 이를 위하여 결제이력 기록을 남긴 후에 곧바로 결제승인이 되었다는 도메인 이벤트를 카프카로 송출한다(Publish)
+- 이를 위하여 주문 기록을 남긴 후에 곧바로 주문이 완료 되었다는 도메인 이벤트를 카프카로 송출한다(Publish)
  
 ```
 package carshare;
 
 @Entity
-@Table(name="Payment_table")
-public class Payment {
+@Table(name="Order_table")
+public class Order {
 
  ...
     @PostPersist
     public void onPostPersist(){
-        Paid paid = new Paid();
-        BeanUtils.copyProperties(this, paid);
-        paid.publishAfterCommit();    
+        Paid Ordered = new Ordered();
+        BeanUtils.copyProperties(this, Ordered);
+        Ordered.publishAfterCommit();    
     }
 }
 ```
-- 배송 서비스에서는 결제승인 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다
+- 알림 서비스에서는 주문완료 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다
 
 ```
 package carshare;
@@ -246,13 +247,13 @@ package carshare;
 public class PolicyHandler{
 
    @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverPaid_Ship(@Payload Paid paid){
+    public void wheneverPaid_Ship(@Payload Ordered Ordered){
 
-        if(paid.isMe()){
-            Delivery delivery = new Delivery();
-            delivery.setOrderId(paid.getOrderId());
-            delivery.setPaymentId(paid.getId());
-            delivery.setStatus("Shipped");
+        if(Ordered.isMe()){
+            Alarm alarm = new alarm();
+            alarm.setOrderId(Ordered.getOrderId());
+            alarm.setReciever(Ordered.getId());
+            alarm.setMessage("Sent");
 
             deliveryRepository.save(delivery) ;
         }
@@ -262,10 +263,10 @@ public class PolicyHandler{
 
 ```
 
-배송 서비스는 접수/결제 서비스와 완전히 분리되어있으며, 이벤트 수신에 따라 처리되기 때문에, 배송 서비스가 유지보수로 인해 잠시 내려간 상태라도 접수신청을 받는데 문제가 없다.
+알림 서비스는 주문 서비스와 완전히 분리되어있으며, 이벤트 수신에 따라 처리되기 때문에, 알림 서비스가 유지보수로 인해 잠시 내려간 상태라도 주문을 받는데에는 문제가 없다.
 
 ```
-#배송(delivery) 서비스를 잠시 내려놓음 (ctrl+c)
+#알림(alarm) 서비스를 잠시 내려놓음 (ctrl+c)
 
 #접수요청 처리
 http localhost:8081/orders productId=1003 qty=2 status="order"   #Success
@@ -274,8 +275,8 @@ http localhost:8081/orders productId=1004 qty=4 status="order"   #Success
 #접수상태 확인
 http localhost:8081/orders     # 주문상태 안바뀜 확인
 
-#배송 서비스 기동
-cd carsharedelivery
+#알림 서비스 기동
+cd carsharealarm
 mvn spring-boot:run
 
 #접수상태 확인
