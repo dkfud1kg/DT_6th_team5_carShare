@@ -380,14 +380,48 @@ Shortest transaction:          0.01
 앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다. 
 
 - Deployment 배포시 resource 설정 적용
-![image](https://user-images.githubusercontent.com/42608068/96592913-e44d8200-1323-11eb-8d94-386116ecaf2c.png)
+```
+spec:
+      containers:
+          ...
+          resources:
+            limits:
+              cpu: 500m 
+            requests:
+              cpu: 200m 
+```
 
 - replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 5프로를 넘어서면 replica 를 10개까지 늘려준다
-![image](https://user-images.githubusercontent.com/42608068/96592628-8de04380-1323-11eb-8288-2288a9e189ec.png)
+```
+kubectl autoscale deploy hospitalmanage -n skcc-ns --min=1 --max=10 --cpu-percent=15
+```
+
 - 오토스케일이 어떻게 되고 있는지 HPA 모니터링을 걸어둔다, 어느정도 시간이 흐른 후, 스케일 아웃이 벌어지는 것을 확인할 수 있다
-![image](https://user-images.githubusercontent.com/16017769/96661016-17c0f880-1386-11eb-86a9-6788ba45bd1a.png)
-- kubectl get으로 HPA을 확인하면 CPU 사용률이 135%로 증가됐다.
-![image](https://user-images.githubusercontent.com/16017769/96661066-30311300-1386-11eb-8d6c-7b6e2f67f83a.png)
+```
+$ kubectl get deploy hospitalmanage -n skcc-ns -w 
+
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+carsharealarm   1/4     4            1           11h
+carsharealarm   2/4     4            2           11h
+carsharealarm   3/4     4            3           11h
+carsharealarm   4/4     4            4           11h
+carsharealarm   4/8     4            4           11h
+carsharealarm   4/8     4            4           11h
+carsharealarm   4/8     4            4           11h
+carsharealarm   4/8     8            4           11h
+carsharealarm   4/10    8            4           11h
+carsharealarm   4/10    8            4           11h
+carsharealarm   4/10    8            4           11h
+carsharealarm   4/10    10           4           11h
+
+```
+
+- kubectl get으로 HPA을 확인하면 CPU 사용률이 132%로 증가됐다.
+```
+$kubectl get hpa hospitalmanage -n skcc-ns 
+NAME                                                 REFERENCE                   TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/hospitalmanage   Deployment/hospitalmanage   132%/15%   1         10        5         11h
+```
 
 ## 무정지 재배포
 - Readiness Probe 및 Liveness Probe 설정(buildspec.yml 설정)
