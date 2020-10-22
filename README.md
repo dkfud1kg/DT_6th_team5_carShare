@@ -424,24 +424,101 @@ horizontalpodautoscaler.autoscaling/alarm         Deployment/alarm              
 ```
 
 ## 무정지 재배포
-- Readiness Probe 및 Liveness Probe 설정(buildspec.yml 설정)
 
-![image](https://user-images.githubusercontent.com/42608068/96593140-24146980-1324-11eb-88d5-7dee61001832.png)
+먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Autoscaler, CB 설정을 제거함
 
-### Readiness Probe 설정
-- CI/CD 파이프라인을 통해 새버전으로 재배포 작업함 Git hook 연동 설정되어 Github의 소스 변경 발생 시 자동 빌드 배포됨
-![image](https://user-images.githubusercontent.com/16017769/96661148-5c4c9400-1386-11eb-8f4f-9b83cab19b8c.png)
+[Readiness Probe 미설정 시 무정지 재배포 불가 테스트]
+Readiness Probe 미설정 시 무정지 재배포 가/불가 여부 확인을 위해 buildspec.yml의 Readiness Probe 설정을 제거함
 
+- seige 로 배포작업 직전에 워크로드를 모니터링 함.
+```
+~$ siege -v -c1 -t240S --content-type "application/json" 'http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms POST {"orderId": "1001", "reciver":"SKCC"}'
 
-## Liveness Probe
-- pod 삭제
+** SIEGE 4.0.4
+** Preparing 1 concurrent users for battle.
+The server is now under siege...
+HTTP/1.1 200     1.03 secs:       0 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 200     0.41 secs:       0 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+:
 
-![image](https://user-images.githubusercontent.com/16017769/96661174-6d95a080-1386-11eb-9f76-ab9a995c6286.png)
+```
 
-- 자동 생성된 pod 확인
+- CI/CD 파이프라인을 통해 새버전으로 재배포 작업함
+Git hook 연동 설정되어 Github의 소스 변경 발생 시 자동 빌드 배포됨
+재배포 작업 중 서비스 중단됨을 확인 (500 오류 발생 확인됨)
+```
+HTTP/1.1 200     0.34 secs:       0 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 200     0.42 secs:       0 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.38 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.41 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.42 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.37 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.39 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.39 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.36 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.35 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.36 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.37 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.38 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+HTTP/1.1 500     0.38 secs:     205 bytes ==> POST http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms
+:
 
-![image](https://user-images.githubusercontent.com/16017769/96661206-81d99d80-1386-11eb-8b9d-539e36ef02e8.png)
+```
 
+- seige 의 화면으로 넘어가서 Availability 가 100% 미만으로 떨어졌는지 확인
+```
+Transactions:                    224 hits
+Availability:                  83.27 %
+Elapsed time:                 128.90 secs
+Data transferred:               0.01 MB
+Response time:                  0.34 secs
+Transaction rate:               1.51 trans/sec
+Throughput:                     0.00 MB/sec
+Concurrency:                    1.00
+Successful transactions:         224
+Failed transactions:              45
+Longest transaction:            1.51
+Shortest transaction:           0.25
+
+```
+- 배포기간중 Availability 가 평소 100%에서 83% 대로 떨어지는 것을 확인. 
+원인은 쿠버네티스가 성급하게 새로 올려진 서비스를 READY 상태로 인식하여 서비스 유입을 진행한 것이기 때문으로 판단됨. 
+
+[Readiness Probe 설정 시 무정지 재배포 가능 테스트]
+Readiness Probe 를 설정함 (buildspec.yml의 Readiness Probe 설정)
+```
+# buildspec.yaml 의 Readiness probe 의 설정:
+- CI/CD 파이프라인을 통해 새버전으로 재배포 작업함
+
+readinessProbe:
+    httpGet:
+      path: '/actuator/health'
+      port: 8080
+    initialDelaySeconds: 30
+    timeoutSeconds: 2
+    periodSeconds: 5
+    failureThreshold: 10
+    
+```
+
+- 동일한 시나리오로 재배포 한 후 Availability 확인:
+```
+Transactions:                    215 hits
+Availability:                 100.00 %
+Elapsed time:                  87.52 secs
+Data transferred:               0.00 MB
+Response time:                  0.41 secs
+Transaction rate:               2.44 trans/sec
+Throughput:                     0.00 MB/sec
+Concurrency:                    1.00
+Successful transactions:         215
+Failed transactions:               0
+Longest transaction:            1.26
+Shortest transaction:           0.28
+
+```
+
+배포기간 동안 Availability 100% 유지되어 변화없기 때문에 무정지 재배포가 성공한 것으로 확인됨.
 
 ## ConfigMap 사용
 
