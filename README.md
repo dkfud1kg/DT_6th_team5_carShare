@@ -154,7 +154,7 @@ pom.xml 에 적용
 - FeignClient 서비스 구현
 
 ```
-# PaymentService.java
+# AlarmService.java
 
 @FeignClient(name="alarm", contextId ="alarm", url="${api.alarm.url}", fallback = AlarmServiceFallback.class)
 public interface AlarmtService {
