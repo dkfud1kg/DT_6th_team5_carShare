@@ -49,6 +49,7 @@
     1. 접수시스템이 과중되면 사용자를 잠시동안 받지 않고 결제를 잠시후에 하도록 유도한다(Circuit breaker, fallback)
 1. 성능
     1. 고객이 본인의 렌탈 상태 및 이력을 접수시스템에서 확인할 수 있어야 한다(CQRS)
+    1. 알림 발송 상태를 고객 상태뷰에 업데이트한다.(CQRS)
 
 
 
@@ -393,7 +394,7 @@ spec:
 
 - replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 5프로를 넘어서면 replica 를 10개까지 늘려준다
 ```
-kubectl autoscale deploy hospitalmanage -n skcc-ns --min=1 --max=10 --cpu-percent=15
+kubectl autoscale deploy alarm -n skcc-ns --min=1 --max=10 --cpu-percent=15
 ```
 
 - 오토스케일이 어떻게 되고 있는지 HPA 모니터링을 걸어둔다, 어느정도 시간이 흐른 후, 스케일 아웃이 벌어지는 것을 확인할 수 있다
