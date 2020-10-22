@@ -418,7 +418,6 @@ carsharealarm     4/10    10           4           3h
 
 - kubectl get으로 HPA을 확인하면 CPU 사용률이 132%로 증가됐다.
 ```
-$kubectl get hpa alarm -n carshare 
 NAME                                                 REFERENCE                   TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 horizontalpodautoscaler.autoscaling/alarm         Deployment/alarm               132%/15%   1         10          5       3h
 ```
@@ -589,7 +588,7 @@ url에 configMap 적용
 * kubectl describe pod carsharealarm-bdd8c8c4c-l52h6  -n carshare
 ```
 Containers:
-  carshareorder:
+  carsharealarm:
     Container ID:   docker://f3c983b12a4478f3b4a7ee5d7fea308638903eb62e0941edd33a3bce5f5f6513
     Image:          496278789073.dkr.ecr.ap-southeast-2.amazonaws.com/carshareorder:9289bba10d5b0758ae9f6279d56ff77b818b8b63
     Image ID:       docker-pullable://879772956301.dkr.ecr.ap-south-1.amazonaws.com/carsharealarm@sha256:95395c95d1bc19ceae8eb5cc0b288b38dc439359a084610f328407dacd694a81
