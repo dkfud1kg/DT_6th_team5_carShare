@@ -88,7 +88,7 @@
 * customerpage 는 CQRS 를 위한 서비스
 
 | MSA | 기능 | port | 조회 API | Gateway 사용시 |
-|---|:---:|:---:|---|---|
+|---|:----:|:---:|---|---|
 | order | 접수 관리 | 8081 | http://localhost:8081/orders |http://carshareorder:8080/orders |
 | delivery | 배송 관리 | 8082 | http://localhost:8082/deliveries | http://carsharedelivery:8080/deliveries |
 | customerpage | 상태 조회 | 8083 | http://localhost:8083/customerpages | http://carsharestatusview:8080/customerpages |
