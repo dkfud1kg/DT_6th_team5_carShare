@@ -85,7 +85,7 @@
 
 ## DDD 의 적용
 분석/설계 단계에서 도출된 MSA는 총 5개로 아래와 같다.
-* customerpage 는 CQRS 를 위한 서비스
+* alarm 서비스 추가 (알림 발송 상태값을 status view에 업데이트하여 CQRS 추가구현)
 
 | MSA | 기능 | port | 조회 API | Gateway 사용시 |
 |---|:----:|:---:|---|---|
