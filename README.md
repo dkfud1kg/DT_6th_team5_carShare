@@ -190,7 +190,7 @@ public interface AlarmtService {
 ```
 #알림(alarm) 서비스를 잠시 내려놓음 (ctrl+c)
 
-#주문취소 처리
+#주문취소 처리 (주문 취소 수행되지 않음)
 http DELETE localhost:8081/orders productId=1001 qty=1 status="order"   #Fail
 http DELETElocalhost:8081/orders productId=1002 qty=3 status="order"   #Fail
 
