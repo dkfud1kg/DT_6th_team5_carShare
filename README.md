@@ -418,9 +418,9 @@ carsharealarm   4/10    10           4           11h
 
 - kubectl get으로 HPA을 확인하면 CPU 사용률이 132%로 증가됐다.
 ```
-$kubectl get hpa hospitalmanage -n skcc-ns 
+$kubectl get hpa alarm -n skcc-ns 
 NAME                                                 REFERENCE                   TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
-horizontalpodautoscaler.autoscaling/hospitalmanage   Deployment/hospitalmanage   132%/15%   1         10        5         11h
+horizontalpodautoscaler.autoscaling/alarm         Deployment/alarm               132%/15%   1         10        5         11h
 ```
 
 ## 무정지 재배포
