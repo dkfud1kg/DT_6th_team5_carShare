@@ -402,18 +402,18 @@ kubectl autoscale deploy carsharealarm -n carshare --min=1 --max=10 --cpu-percen
 $ kubectl get deploy carsharealarm -n carshare -w 
 
 NAME             READY   UP-TO-DATE   AVAILABLE   AGE
-carsharealarm   1/4     4            1            3h
-carsharealarm   2/4     4            2            3h
-carsharealarm   3/4     4            3            3h
-carsharealarm   4/4     4            4            3h
-carsharealarm   4/8     4            4            3h
-carsharealarm   4/8     4            4            3h
-carsharealarm   4/8     4            4            3h
-carsharealarm   4/8     8            4            3h
-carsharealarm   4/10    8            4            3h
-carsharealarm   4/10    8            4            3h
-carsharealarm   4/10    8            4            3h
-carsharealarm   4/10    10           4            3h
+carsharealarm     1/4     4            1           3h
+carsharealarm     2/4     4            2           3h
+carsharealarm     3/4     4            3           3h
+carsharealarm     4/4     4            4           3h
+carsharealarm     4/8     4            4           3h
+carsharealarm     4/8     4            4           3h
+carsharealarm     4/8     4            4           3h
+carsharealarm     4/8     8            4           3h
+carsharealarm     4/10    8            4           3h
+carsharealarm     4/10    8            4           3h
+carsharealarm     4/10    8            4           3h
+carsharealarm     4/10    10           4           3h
 
 ```
 
