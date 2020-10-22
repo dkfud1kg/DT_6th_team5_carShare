@@ -260,19 +260,19 @@ public class PolicyHandler{
 ```
 #알림(alarm) 서비스를 잠시 내려놓음 (ctrl+c)
 
-#접수요청 처리
-http localhost:8081/orders productId=1003 qty=2 status="order"   #Success
-http localhost:8081/orders productId=1004 qty=4 status="order"   #Success
+#접수요청 처리 (주문접수는 문제없이 처리 됨)
+http localhost:8081/orders productId=1003 qty=2 status="ordered"   #Success
+http localhost:8081/orders productId=1004 qty=4 status="ordered"   #Success
 
-#접수상태 확인
-http localhost:8081/orders     # 주문상태 안바뀜 확인
+#알림 발송 상태 확인
+http localhost:8081/alarms     # 알림 발송되지않음
 
 #알림 서비스 기동
 cd carsharealarm
 mvn spring-boot:run
 
-#접수상태 확인
-http localhost:8081/orders     # 접수상태가 "ordered(접수됨)"으로 확인
+#알림 발송 상태 확인
+http localhost:8081/alarms     # 알림 발송 성공 됨
 ```
 
 # 운영
