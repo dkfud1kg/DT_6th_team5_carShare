@@ -295,39 +295,6 @@ $$$ 배포화면 캡쳐 추후 추가&&&
 ```
 kubectl label namespace carshare istio-injection=enabled 
 ```
-
-* 부하테스터 siege 툴을 통한 서킷 브레이커 동작 확인:
-- 동시사용자 200명
-- 20초 동안 실시
-```
-siege -c200 -t20S -v 'http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms  POST {"orderId": "1001", "reciver":"SKCC"}
-
-HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.03 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.05 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 503    0.08 secs:      81  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.10 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.08 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 503    0.02 secs:      81  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 503    0.05 secs:      81  bytes ==> GET   /alamrs
-HTTP/1.1 503    0.03 secs:      81  bytes ==> GET   /alamrs
-:
-Transactions:                   432  hits
-Availability:                 84.54  %
-Elapsed time:                  1.23  secs
-Data transferred:              0.28  MB
-Response time:                 0.06  secs
-Transaction rate:             78.60  trans/sec
-Throughput:                    0.21  MB/sec
-Concurrency:                  21.16
-Successful transactions:        432
-Failed transactions:             79
-Longest transaction:           1.44
-Shortest transaction:          0.01
-
-```
 * 서킷 브레이킹을 위한 DestinationRule 적용
 ```
 apiVersion: networking.istio.io/v1alpha3
@@ -348,8 +315,66 @@ spec:
       baseEjectionTime: 10s
       maxEjectionPercent: 100
 ```
+* 부하테스터 siege 툴을 통한 서킷 브레이커 동작 확인:
+- 동시사용자 200명
+- 20초 동안 실시
+```
+siege -c200 -t20S -v 'http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms  POST {"orderId": "1001", "reciver":"SKCC"}
+
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.03 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.05 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 503    0.08 secs:      81  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.10 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.08 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 503    0.02 secs:      81  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 503    0.05 secs:      81  bytes ==> GET   /alamrs
+HTTP/1.1 503    0.03 secs:      81  bytes ==> GET   /alamrs
+:
+Transactions:                   432  hits
+Availability:                 84.54  %
+Elapsed time:                  4.23  secs
+Data transferred:              0.28  MB
+Response time:                 0.06  secs
+Transaction rate:             78.60  trans/sec
+Throughput:                    0.21  MB/sec
+Concurrency:                  21.16
+Successful transactions:        432
+Failed transactions:             79
+Longest transaction:           1.44
+Shortest transaction:          0.01
+
+```
 * DestinationRule 적용되어 서킷 브레이킹 동작 확인 (kiali 화면)
 ![image](https://user-images.githubusercontent.com/70302900/96823825-50390300-1468-11eb-9fd1-ec66fb7bfe06.png)
+
+DestinationRule 적용 제거 후 다시 부하 발생하여 정상 처리 확인
+```
+siege -c200 -t20S -v 'http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms  POST {"orderId": "1001", "reciver":"SKCC"}
+
+HTTP/1.1 200    0.04secs:     6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.12 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.03 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
+:
+Transactions:                   981  hits
+Availability:                100.00  %
+Elapsed time:                  2.87  secs
+Data transferred:              0.00  MB
+Response time:                 0.04  secs
+Transaction rate:            103.21  trans/sec
+Throughput:                    0.00  MB/sec
+Concurrency:                  20.56
+Successful transactions:        981
+Failed transactions:             0
+Longest transaction:           2.13
+Shortest transaction:          0.01
+
+```
 
 
 ### 오토스케일 아웃
