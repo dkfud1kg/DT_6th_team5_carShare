@@ -288,7 +288,7 @@ Git Hook 설정으로 연결된 GitHub의 소스 변경 발생 시 자동 배포
 $$$ 배포화면 캡쳐 추후 추가&&&
 
 
-## 동기식 호출 / 서킷 브레이킹 / 장애격리
+## 서킷 브레이킹 / 장애격리
 
 ### 서킷 브레이킹 istio-injection + DestinationRule
 
@@ -322,17 +322,17 @@ spec:
 ```
 siege -c200 -t20S -v 'http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms  POST {"orderId": "1001", "reciver":"SKCC"}
 
-HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.03 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.05 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 503    0.08 secs:      81  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.10 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.08 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 503    0.02 secs:      81  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 503    0.05 secs:      81  bytes ==> GET   /alamrs
-HTTP/1.1 503    0.03 secs:      81  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.03 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.05 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 503    0.08 secs:      81  bytes ==> GET   /alarms
+HTTP/1.1 200    0.10 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.08 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 503    0.02 secs:      81  bytes ==> GET   /alarms
+HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 503    0.05 secs:      81  bytes ==> GET   /alarms
+HTTP/1.1 503    0.03 secs:      81  bytes ==> GET   /alarms
 :
 Transactions:                   432  hits
 Availability:                 84.54  %
@@ -355,12 +355,12 @@ DestinationRule 적용 제거 후 다시 부하 발생하여 정상 처리 확�
 ```
 siege -c200 -t20S -v 'http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms  POST {"orderId": "1001", "reciver":"SKCC"}
 
-HTTP/1.1 200    0.04secs:     6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.12 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.03 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
-HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.04secs:     6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.12 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.03 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alarms
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alarms
 :
 Transactions:                   981  hits
 Availability:                100.00  %
@@ -394,34 +394,34 @@ spec:
 
 - replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 5프로를 넘어서면 replica 를 10개까지 늘려준다
 ```
-kubectl autoscale deploy alarm -n skcc-ns --min=1 --max=10 --cpu-percent=15
+kubectl autoscale deploy carsharealarm -n carshare --min=1 --max=10 --cpu-percent=15
 ```
 
 - 오토스케일이 어떻게 되고 있는지 HPA 모니터링을 걸어둔다, 어느정도 시간이 흐른 후, 스케일 아웃이 벌어지는 것을 확인할 수 있다
 ```
-$ kubectl get deploy hospitalmanage -n skcc-ns -w 
+$ kubectl get deploy carsharealarm -n carshare -w 
 
 NAME             READY   UP-TO-DATE   AVAILABLE   AGE
-carsharealarm   1/4     4            1           11h
-carsharealarm   2/4     4            2           11h
-carsharealarm   3/4     4            3           11h
-carsharealarm   4/4     4            4           11h
-carsharealarm   4/8     4            4           11h
-carsharealarm   4/8     4            4           11h
-carsharealarm   4/8     4            4           11h
-carsharealarm   4/8     8            4           11h
-carsharealarm   4/10    8            4           11h
-carsharealarm   4/10    8            4           11h
-carsharealarm   4/10    8            4           11h
-carsharealarm   4/10    10           4           11h
+carsharealarm   1/4     4            1            3h
+carsharealarm   2/4     4            2            3h
+carsharealarm   3/4     4            3            3h
+carsharealarm   4/4     4            4            3h
+carsharealarm   4/8     4            4            3h
+carsharealarm   4/8     4            4            3h
+carsharealarm   4/8     4            4            3h
+carsharealarm   4/8     8            4            3h
+carsharealarm   4/10    8            4            3h
+carsharealarm   4/10    8            4            3h
+carsharealarm   4/10    8            4            3h
+carsharealarm   4/10    10           4            3h
 
 ```
 
 - kubectl get으로 HPA을 확인하면 CPU 사용률이 132%로 증가됐다.
 ```
-$kubectl get hpa alarm -n skcc-ns 
+$kubectl get hpa alarm -n carshare 
 NAME                                                 REFERENCE                   TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
-horizontalpodautoscaler.autoscaling/alarm         Deployment/alarm               132%/15%   1         10        5         11h
+horizontalpodautoscaler.autoscaling/alarm         Deployment/alarm               132%/15%   1         10          5       3h
 ```
 
 ## 무정지 재배포
