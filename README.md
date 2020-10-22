@@ -122,7 +122,7 @@ spring:
         - id: alarm
           uri: http://carsharealarm:8080
           predicates:
-            - Path=/alarm/**  
+            - Path=/alarms/**  
 ```
 
 
