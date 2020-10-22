@@ -538,7 +538,7 @@ data:
 ```
 my-config라는 ConfigMap을 생성하고 key값에 도메인 url을 등록한다. 
 
-* carshareorder/buildsepc.yaml (configmap 사용)
+* carsharealarm/buildsepc.yaml (configmap 사용)
 ```
  cat  <<EOF | kubectl apply -f -
         apiVersion: apps/v1
@@ -587,13 +587,13 @@ public interface PaymentService {
 ```
 url에 configMap 적용
 
-* kubectl describe pod carshareorder-bdd8c8c4c-l52h6  -n carshare
+* kubectl describe pod carsharealarm-bdd8c8c4c-l52h6  -n carshare
 ```
 Containers:
   carshareorder:
     Container ID:   docker://f3c983b12a4478f3b4a7ee5d7fea308638903eb62e0941edd33a3bce5f5f6513
     Image:          496278789073.dkr.ecr.ap-southeast-2.amazonaws.com/carshareorder:9289bba10d5b0758ae9f6279d56ff77b818b8b63
-    Image ID:       docker-pullable://496278789073.dkr.ecr.ap-southeast-2.amazonaws.com/carshareorder@sha256:95395c95d1bc19ceae8eb5cc0b288b38dc439359a084610f328407dacd694a81
+    Image ID:       docker-pullable://879772956301.dkr.ecr.ap-south-1.amazonaws.com/carsharealarm@sha256:95395c95d1bc19ceae8eb5cc0b288b38dc439359a084610f328407dacd694a81
     Port:           8080/TCP
     Host Port:      0/TCP
     State:          Running
