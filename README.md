@@ -296,20 +296,33 @@ $$$ 배포화면 캡쳐 추후 추가&&&
 kubectl label namespace carshare istio-injection=enabled 
 ```
 
-* 서킷 브레이커 pending time 설정
-![image](https://user-images.githubusercontent.com/70302900/96588904-27592680-131f-11eb-94dc-2b61b67c3ce2.png)
-
-
-* 부하테스트 툴(Siege) 설치 및 Order 서비스 Load Testing 
-  - 동시 사용자 5명
-  - 2초 실행 
-![image](https://user-images.githubusercontent.com/70302900/96588949-38099c80-131f-11eb-9e37-5f1846fca268.png)
-
-
-* 키알리(kiali)화면에 서킷브레이커 동작 확인
-![image](https://user-images.githubusercontent.com/70302900/96589002-46f04f00-131f-11eb-92b7-dd13ce203382.png)
-
-
+* 부하테스터 siege 툴을 통한 서킷 브레이커 동작 확인:
+- 동시사용자 200명
+- 20초 동안 실시
+```
+$ siege -v -c200 -t20S -r10 --content-type "application/json" 'http://a054463cd929f4f5d8511d21742857b1-661192261.us-east-2.elb.amazonaws.com:8080/hospitals POST {"id": "101","hospitalId":"2","hospitalNm":"bye","chkDate":"0909","pcnt":20}'  
+```
+* 서킷 브레이킹을 위한 DestinationRule 적용
+```
+#dr-hospital.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: dr-hospital
+  namespace: skcc-ns
+spec:
+  host: hospitalmanage
+  trafficPolicy:
+    connectionPool:
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
+    outlierDetection:
+      interval: 1s
+      consecutiveErrors: 2
+      baseEjectionTime: 10s
+      maxEjectionPercent: 100
+```
 ### 오토스케일 아웃
 앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다. 
 
