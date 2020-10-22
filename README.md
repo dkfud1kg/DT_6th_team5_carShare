@@ -300,18 +300,43 @@ kubectl label namespace carshare istio-injection=enabled
 - 동시사용자 200명
 - 20초 동안 실시
 ```
-$ siege -v -c200 -t20S -r10 --content-type "application/json" 'http://a054463cd929f4f5d8511d21742857b1-661192261.us-east-2.elb.amazonaws.com:8080/hospitals POST {"id": "101","hospitalId":"2","hospitalNm":"bye","chkDate":"0909","pcnt":20}'  
+siege -c200 -t20S -v 'http://a13bace79d588418ba102b6880b1fb46-68406260.ap-south-1.elb.amazonaws.com:8080/alarms  POST {"orderId": "1001", "reciver":"SKCC"}
+
+HTTP/1.1 200    0.02 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.03 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.05 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 503    0.08 secs:      81  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.10 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.08 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 503    0.02 secs:      81  bytes ==> GET   /alamrs
+HTTP/1.1 200    0.11 secs:    6273  bytes ==> GET   /alamrs
+HTTP/1.1 503    0.05 secs:      81  bytes ==> GET   /alamrs
+HTTP/1.1 503    0.03 secs:      81  bytes ==> GET   /alamrs
+:
+Transactions:                   432  hits
+Availability:                 84.54  %
+Elapsed time:                  1.23  secs
+Data transferred:              0.28  MB
+Response time:                 0.06  secs
+Transaction rate:             78.60  trans/sec
+Throughput:                    0.21  MB/sec
+Concurrency:                  21.16
+Successful transactions:        432
+Failed transactions:             79
+Longest transaction:           1.44
+Shortest transaction:          0.01
+
 ```
 * 서킷 브레이킹을 위한 DestinationRule 적용
 ```
-#dr-hospital.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: dr-hospital
-  namespace: skcc-ns
+  name: alarms
+  namespace: carshare
 spec:
-  host: hospitalmanage
+  host: carsharealarm
   trafficPolicy:
     connectionPool:
       http:
