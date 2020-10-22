@@ -272,7 +272,7 @@ cd carsharealarm
 mvn spring-boot:run
 
 #접수상태 확인
-http localhost:8081/orders     # 접수상태가 "shipped(배송됨)"으로 확인
+http localhost:8081/orders     # 접수상태가 "ordered(접수됨)"으로 확인
 ```
 
 # 운영
