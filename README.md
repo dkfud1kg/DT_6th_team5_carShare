@@ -156,11 +156,11 @@ pom.xml 에 적용
 ```
 # PaymentService.java
 
-@FeignClient(name="payment", contextId ="payment", url="${api.payment.url}", fallback = PaymentServiceFallback.class)
-public interface PaymentService {
+@FeignClient(name="alarm", contextId ="alarm", url="${api.alarm.url}", fallback = AlarmServiceFallback.class)
+public interface AlarmtService {
 
-    @RequestMapping(method= RequestMethod.POST, path="/payments")
-    public void pay(@RequestBody Payment payment);
+    @RequestMapping(method= RequestMethod.POST, path="/alarms")
+    public void pay(@RequestBody Alarm alarm);
 
 }
 ```
