@@ -427,7 +427,7 @@ horizontalpodautoscaler.autoscaling/alarm         Deployment/alarm              
 
 먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Autoscaler, CB 설정을 제거함
 
-[Readiness Probe 미설정 시 무정지 재배포 불가 테스트]
+- Readiness Probe 미설정 시 무정지 재배포 불가 테스트
 Readiness Probe 미설정 시 무정지 재배포 가/불가 여부 확인을 위해 buildspec.yml의 Readiness Probe 설정을 제거함
 
 - seige 로 배포작업 직전에 워크로드를 모니터링 함.
@@ -484,7 +484,7 @@ Shortest transaction:           0.25
 - 배포기간중 Availability 가 평소 100%에서 83% 대로 떨어지는 것을 확인. 
 원인은 쿠버네티스가 성급하게 새로 올려진 서비스를 READY 상태로 인식하여 서비스 유입을 진행한 것이기 때문으로 판단됨. 
 
-[Readiness Probe 설정 시 무정지 재배포 가능 테스트]
+- Readiness Probe 설정 시 무정지 재배포 가능 테스트
 Readiness Probe 를 설정함 (buildspec.yml의 Readiness Probe 설정)
 ```
 # buildspec.yaml 의 Readiness probe 의 설정:
