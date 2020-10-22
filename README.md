@@ -348,7 +348,7 @@ Shortest transaction:          0.01
 
 ```
 * DestinationRule 적용되어 서킷 브레이킹 동작 확인 (kiali 화면)
-![image](https://user-images.githubusercontent.com/70302900/96823825-50390300-1468-11eb-9fd1-ec66fb7bfe06.png)
+![image](https://user-images.githubusercontent.com/70302900/96824262-54195500-1469-11eb-916c-80fd275842da.png)
 
 DestinationRule 적용 제거 후 다시 부하 발생하여 정상 처리 확인
 ```
@@ -375,7 +375,6 @@ Longest transaction:           2.13
 Shortest transaction:          0.01
 
 ```
-
 
 ### 오토스케일 아웃
 앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다. 
