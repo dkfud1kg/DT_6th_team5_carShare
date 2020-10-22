@@ -349,8 +349,6 @@ Longest transaction:           1.44
 Shortest transaction:          0.01
 
 ```
-* DestinationRule 적용되어 서킷 브레이킹 동작 확인 (kiali 화면)
-![image](https://user-images.githubusercontent.com/70302900/96824262-54195500-1469-11eb-916c-80fd275842da.png)
 
 DestinationRule 적용 제거 후 다시 부하 발생하여 정상 처리 확인
 ```
